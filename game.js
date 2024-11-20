@@ -1,30 +1,30 @@
-// position variables
+// Position variables
 let characterX = 400;
 let characterY = -200;
 let x = 350;
 let y = 200;
 
-// game logic variable
+// Game logic variables
 let velocityY = 0.5;
-let acceleration = 0.3;
+let acceleration = 0.1;
 
-// game state variables
-let gameState = true;
+// Game state variables
+let gameState = "start"; // "start", "playing", "lost", "won"
+
 
 function setup() {
   createCanvas(700, 600);
 }
 
-//  character
-
+// Character drawing function
 function character(x, y, axeUsed) {
   translate(x - 330, 0);
   scale(0.7);
 
   // Boots
-
   function leftBoot(x, y) {
     push();
+    noStroke();
     fill(0, 0, 0);
     arc(x, y, 30, 40, PI, 2 * PI);
     rect(x, y - 20, 40, 20);
@@ -53,6 +53,7 @@ function character(x, y, axeUsed) {
 
   function rightBoot(x, y) {
     push();
+    noStroke();
     fill(0, 0, 0);
     arc(x, y, 30, 40, PI, 2 * PI);
     rect(x - 40, y - 20, 40, 20);
@@ -119,138 +120,120 @@ function character(x, y, axeUsed) {
   jeans(x - 40, y + 20);
 
   // Hoodie
-
-  function hoodieWithArmsDown(x, y) {
+  function hoodie(x, y, armsUp) {
     push();
     stroke(0, 0, 0);
     fill(225, 10, 10);
-    rect(x + 70, y, 80, 18, 6);
+    if (armsUp) {
+      // Arms up
+      push();
+      translate(x + 65, y + 5);
+      rotate(-0.8);
+      rect(0, 0, 80, 18, 6);
+      pop();
+      push();
+      translate(x - 40, y - 50);
+      rotate(0.8);
+      rect(0, 0, 80, 18, 6);
+      pop();
+    } else {
+      // Arms down
+      rect(x + 70, y, 80, 18, 6);
+      rect(x - 70, y, 80, 18, 6);
+    }
+    // Chest
+
     rect(x, y, 80, 80, 10);
     arc(x + 40, y + 74, 80, 30, 0, PI);
-    rect(x - 70, y, 80, 18, 6);
-
-    noFill();
-    rect(x + 50, y + 20, 20, 20, 3);
-
-    fill(255, 255, 255);
-    arc(x + 40, y - 1, 20, 10, 0, PI);
-
     pop();
+    noStroke();
+    rect(x + 50, y + 20, 20, 20, 3);
   }
+
+  hoodie(x - 40, y - 60, !axeUsed);
 
   // Gloves
-
-  function leftGloveDown(x, y) {
+  function gloves(x, y, armsUp) {
     push();
-    stroke(0, 0, 0);
     fill(0, 140, 185);
-    ellipse(x, y, 25, 20);
-    // ice axe
-    fill(155, 80, 100);
-    rect(x - 8, y - 50, 5, 70);
-    fill(180, 180, 180);
-    triangle(x - 55, y - 40, x + 10, y - 50, x + 10, y - 30);
+    if (armsUp) {
+      // Left glove up
+      push();
+      stroke(0, 0, 0);
+      translate(x + 20, y - 55);
+      rotate(0.8);
 
-    fill(0, 140, 185);
-    ellipse(x - 6, y, 20, 25);
+      fill(0, 140, 185);
+      ellipse(-115, 42, 25, 20);
+
+      // ice axe
+      fill(155, 80, 100);
+      rect(-117, -8, 5, 70);
+      fill(180, 180, 180);
+
+      triangle(-170, -2, -105, -8, -105, 12);
+
+      fill(0, 140, 185);
+      ellipse(-121, 42, 20, 25);
+      pop();
+
+      // Right glove up
+      push();
+      stroke(0, 0, 0);
+      translate(x - 20, y - 55);
+      rotate(-0.8);
+      fill(0, 140, 185);
+      ellipse(115, 42, 25, 20);
+      //ice axe
+      fill(155, 80, 100);
+      rect(118, -8, 5, 70);
+      fill(180, 180, 180);
+
+      // triangle(55, -40, -10, -50, -10, -30);
+      triangle(170, -2, 105, -8, 105, 12);
+
+      fill(0, 140, 185);
+      ellipse(121, 42, 20, 25);
+
+      pop();
+    } else {
+      // Left glove down
+      push();
+      stroke(0, 0, 0);
+      fill(0, 140, 185);
+      ellipse(x - 110, y - 51, 25, 20);
+
+      // ice axe
+      fill(155, 80, 100);
+      rect(x - 118, y - 101, 5, 70);
+      fill(180, 180, 180);
+      triangle(x - 165, y - 91, x - 100, y - 101, x - 100, y - 81);
+
+      fill(0, 140, 185);
+      ellipse(x - 115, y - 51, 20, 25);
+      pop();
+
+      // Right glove down
+      push();
+      stroke(0, 0, 0);
+      fill(0, 140, 185);
+      ellipse(x + 110, y - 51, 25, 20);
+
+      //ice axe
+      fill(155, 80, 100);
+      rect(x + 113, y - 101, 5, 70);
+      fill(180, 180, 180);
+      triangle(x + 165, y - 91, x + 100, y - 101, x + 100, y - 81);
+
+      fill(0, 140, 185);
+      ellipse(x + 115, y - 51, 20, 25);
+      pop();
+    }
     pop();
   }
 
-  function rightGloveDown(x, y) {
-    push();
-    stroke(0, 0, 0);
-    fill(0, 140, 185);
-    ellipse(x, y, 25, 20);
-    //ice axe
-    fill(155, 80, 100);
-    rect(x + 3, y - 50, 5, 70);
-    fill(180, 180, 180);
-    triangle(x + 55, y - 40, x - 10, y - 50, x - 10, y - 30);
+  gloves(x, y, !axeUsed);
 
-    fill(0, 140, 185);
-    ellipse(x + 6, y, 20, 25);
-    pop();
-  }
-
-  function hoodieWithArmsUp(x, y) {
-    push();
-    stroke(0, 0, 0);
-    fill(225, 10, 10);
-    //right arm
-    push();
-    translate(x + 65, y + 5);
-    rotate(-0.8);
-    rect(0, 0, 80, 18, 6);
-    pop();
-    //chest
-    rect(x, y, 80, 80, 10);
-    arc(x + 40, y + 74, 80, 30, 0, PI);
-
-    push();
-    translate(x - 40, y - 50);
-    rotate(0.8);
-    rect(0, 0, 80, 18, 6);
-    pop();
-
-    noFill();
-    rect(x + 50, y + 20, 20, 20, 3);
-
-    fill(255, 255, 255);
-    arc(x + 40, y - 1, 20, 10, 0, PI);
-
-    pop();
-  }
-
-  // Gloves
-
-  function leftGloveUp(x, y) {
-    push();
-    stroke(0, 0, 0);
-    translate(x + 20, y - 55);
-    rotate(0.8);
-
-    fill(0, 140, 185);
-    ellipse(0, 0, 25, 20);
-
-    // ice axe
-    fill(155, 80, 100);
-    rect(-2, -50, 5, 70);
-    fill(180, 180, 180);
-
-    triangle(-55, -40, 10, -50, 10, -30);
-
-    fill(0, 140, 185);
-    ellipse(-6, 0, 20, 25);
-    pop();
-  }
-
-  function rightGloveUp(x, y) {
-    push();
-    stroke(0, 0, 0);
-    translate(x - 20, y - 55);
-    rotate(-0.8);
-    fill(0, 140, 185);
-    ellipse(0, 0, 25, 20);
-    //ice axe
-    fill(155, 80, 100);
-    rect(3, -50, 5, 70);
-    fill(180, 180, 180);
-    triangle(55, -40, -10, -50, -10, -30);
-
-    fill(0, 140, 185);
-    ellipse(6, 0, 20, 25);
-    pop();
-  }
-
-  if (axeUsed) {
-    rightGloveDown(x + 110, y - 51);
-    leftGloveDown(x - 110, y - 51);
-    hoodieWithArmsDown(x - 40, y - 60);
-  } else {
-    rightGloveUp(x + 110, y - 51);
-    leftGloveUp(x - 110, y - 51);
-    hoodieWithArmsUp(x - 40, y - 60);
-  }
   // Neck
 
   function neck(x, y) {
@@ -323,6 +306,7 @@ function character(x, y, axeUsed) {
 
   // Helmet
   function helmet(x, y) {
+    noStroke();
     fill(0, 140, 185);
     ellipse(x, y, 50, 10);
     arc(x, y, 50, 55, PI, 2 * PI);
@@ -384,62 +368,182 @@ function character(x, y, axeUsed) {
   helmet(x, y - 100);
 }
 
-// ice walls
-
-function iceWall(x, y){
-push();
-fill(100, 150, 200);
-rect(x - 120, y - y - 15, 80, windowHeight);
-rect(x + 40, y - y - 15, 80, windowHeight);
-fill(60, 110, 150);
-rect(x - 40, y + 310, 80, 42);
-triangle(x + 40, y + 310, x + 40, y + 352, x + 105, y + 352);
-triangle(x - 105, y + 352, x - 40, y + 310, x - 40, y + 352);
-
-push();
-fill(150, 200, 255);
-rotate(-0.02);
-rect(x - x - 15, y - y, 250, windowHeight);
-pop();
-
-push();
-fill(150, 200, 255);
-rect(x - x, y + 352, windowWidth, windowHeight);
-rotate(0.02);
-rect(x + 115, y - y - 15, 250, windowHeight);
-pop();
-pop();
-}
-
-function draw() {
-  background(0, 30, 65, 240);
+// Ice walls function
+function iceWall(x, y) {
+  push();
   noStroke();
+  fill(100, 150, 200);
+  rect(x - 120, y - y - 15, 80, windowHeight);
+  rect(x + 40, y - y - 15, 80, windowHeight);
+  fill(60, 110, 150);
+  rect(x - 40, y + 310, 80, 42);
+  triangle(x + 40, y + 310, x + 40, y + 352, x + 105, y + 352);
+  triangle(x - 105, y + 352, x - 40, y + 310, x - 40, y + 352);
 
-  iceWall(x, y);
+  push();
+  fill(150, 200, 255);
+  rotate(-0.02);
+  rect(x - x - 15, y - y, 250, windowHeight);
+  pop();
 
+  push();
+  fill(150, 200, 255);
+  rect(x - x, y + 352, windowWidth, windowHeight);
+  rotate(0.02);
+  rect(x + 115, y - y - 15, 250, windowHeight);
+  pop();
+  pop();
+}
 
-  if (mouseIsPressed === true) {
-    character(characterX, characterY, true);
-  } else {
-    character(characterX, characterY, false);
-  }
+// Start screen
+function startScreen() {
+  push();
+  stroke(155, 255, 255); //buttons and game name
+  strokeWeight(25);
+  fill(255, 255, 255);
 
-  if (gameState === true) {
-    characterY = characterY + velocityY;
-    velocityY = velocityY + acceleration;
+  textSize(130); // Game name
+  text("GLACIAL", x - 270, y - 10);
+  text("FALL", x - 160, y + 150);
 
-    if (mouseIsPressed) {
-      velocityY = velocityY - 0.5;
-    }
+  strokeWeight(5); // Button shape
+  rect(x - 135, y + 200, 270, 50, 20);
 
-    if (characterY > 610 && velocityY > 1.5) {
-      gameState = false;
-      console.log("Game OVER");
-    }
-    // (characterY > 800 && velocityY > 5) {
-    //     gameState = false;
-    //     console.log("NICE");
-    // }
+  noStroke(); // Buttons texts
+  fill(0, 30, 65);
+  textSize(30);
+  text("CLICK TO FALL", x - 110, y + 235);
+  pop();
+}
+
+// Losing result screen
+function resultScreenLose() {
+  push();
+  stroke(155, 255, 255); //buttons and game name
+  strokeWeight(25);
+  fill(255, 255, 255);
+
+  textSize(80); // Game name
+  text("GAME OVER", x - 250, y - 10);
+  textSize(60);
+  text("DO YOU WANT TO", x - 260, y + 150);
+
+  strokeWeight(5); // Button shape
+  rect(x - 115, y + 200, 230, 50, 20);
+
+  noStroke(); // Buttons texts
+  fill(0, 30, 65);
+  textSize(30);
+  text("FALL AGAIN", x - 85, y + 235);
+  pop();
+}
+
+// Winning result screen
+function resultScreenWin() {
+  push();
+  stroke(155, 255, 255); //buttons and game name
+  strokeWeight(25);
+  fill(255, 255, 255);
+
+  textSize(80); // Game name
+  text("YOU WON", x - 220, y - 10);
+  textSize(60);
+  text("DO YOU WANT TO", x - 260, y + 150);
+
+  strokeWeight(5); // Button shape
+  rect(x - 115, y + 200, 230, 50, 20);
+
+  noStroke(); // Buttons texts
+  fill(0, 30, 65);
+  textSize(30);
+  text("FALL AGAIN", x - 85, y + 235);
+  pop();
+}
+
+// // Function to draw the gradient background
+function drawGradientBackground() {
+  for (let y = 0; y < height; y++) {
+    let inter = map(y, 0, height, 0, 1);
+    let c = lerpColor(color("#001F3F"), color("#0077BE"), inter);
+    stroke(c);
+    line(0, y, width, y);
   }
 }
 
+// Main game logic
+function draw() {
+  drawGradientBackground(); // Draw the glacier gradient background
+
+  if (gameState === "start") {
+    startScreen();
+  } else if (gameState === "playing") {
+    iceWall(x, y);
+
+    if (mouseIsPressed || keyIsDown(32)) {
+      character(characterX, characterY, true);
+    } else {
+      character(characterX, characterY, false);
+    }
+
+    // Character movement
+    characterY += velocityY;
+    velocityY += acceleration;
+
+    if (mouseIsPressed || keyIsDown(32)) {
+      velocityY -= 0.3;
+    }
+
+    // Losing condition
+    if (characterY > 610 && velocityY > 5) {
+      gameState = "lost";
+    }
+
+    // Winning condition
+    if (characterY > 610 && velocityY < 5) {
+      gameState = "won";
+    }
+  } else if (gameState === "lost") {
+    resultScreenLose();
+  } else if (gameState === "won") {
+    resultScreenWin();
+  }
+}
+
+// Mouse click to start the game
+function mousePressed() {
+  if (gameState === "start") {
+    if (
+      mouseIsPressed &&
+      mouseX > x - 138 &&
+      mouseX < x + 137 &&
+      mouseY > y + 198 &&
+      mouseY < y + 253
+    ) {
+      gameState = "playing";
+    }
+  } else if (gameState === "lost") {
+    if (
+      mouseIsPressed &&
+      mouseX > x - 118 &&
+      mouseX < x + 117 &&
+      mouseY > y + 198 &&
+      mouseY < y + 253
+    ) {
+      gameState = "playing";
+      characterY = -200; //Reset character position
+      velocityY = 0.5; //Reset velocity
+    }
+  } else if (gameState === "won") {
+    if (
+      mouseIsPressed &&
+      mouseX > x - 118 &&
+      mouseX < x + 117 &&
+      mouseY > y + 198 &&
+      mouseY < y + 253
+    ) {
+      gameState = "playing";
+      characterY = -200; //Reset character position
+      velocityY = 0.5; //Reset velocity)
+    }
+  }
+}
